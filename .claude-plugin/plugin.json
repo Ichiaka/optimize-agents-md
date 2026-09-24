@@ -1,0 +1,12 @@
+{
+  "name": "optimize-agents-md",
+  "description": "Reviews AGENTS.md / CLAUDE.md and proposes a version that costs fewer tokens per session without losing or changing any rule.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ichiaka"
+  },
+  "homepage": "https://github.com/Ichiaka/optimize-agents-md",
+  "repository": "https://github.com/Ichiaka/optimize-agents-md",
+  "license": "MIT",
+  "keywords": ["agents-md", "claude-md", "tokens", "context"]
+}

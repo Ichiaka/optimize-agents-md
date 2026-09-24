@@ -23,18 +23,47 @@ Mueve, no borra. Reparte el contenido en tres tipos:
 Un comprobador busca cada regla del original en la propuesta y **falla si alguna ha desaparecido**.
 Nada se aplica sin que el usuario diga «apply it» (o «aplícalo»).
 
-## Instalación (Claude Code)
+## Instalación
+
+### Claude Code, como plugin (recomendado)
+
+En una sesión de Claude Code, ejecuta:
+
+```
+/plugin marketplace add Ichiaka/optimize-agents-md
+/plugin install optimize-agents-md@optimize-agents-md
+```
+
+El comando queda disponible como `/optimize-agents-md:optimize-agents`.
+
+### Pidiéndoselo al agente en el chat
+
+En Claude Code (o en cualquier agente que pueda ejecutar comandos), abre tu proyecto y escribe:
+
+> Instala la skill de https://github.com/Ichiaka/optimize-agents-md: clona el repo, copia
+> `skills/optimize-agents-md` a `.claude/skills/` y `commands/optimize-agents.md` a `.claude/commands/`.
+
+### A mano
 
 ```bash
 # desde la raíz de tu proyecto
 mkdir -p .claude/skills .claude/commands
-cp -r ruta/a/este/repo/skill/optimize-agents-md .claude/skills/
+cp -r ruta/a/este/repo/skills/optimize-agents-md .claude/skills/
 cp ruta/a/este/repo/commands/optimize-agents.md .claude/commands/
 ```
 
 Abre una sesión nueva para que el agente detecte la skill y el comando.
 
+### Otros agentes (Codex, Cursor, Gemini CLI, Copilot…)
+
+La skill es Markdown (`SKILL.md`) y dos scripts de Python sin dependencias, así que cualquier agente
+que pueda leer ficheros y ejecutar Python puede usarla. Copia `skills/optimize-agents-md` donde tu
+herramienta guarde las skills (o en cualquier sitio del proyecto) y pídele al agente: «revisa mi
+AGENTS.md con la skill optimize-agents-md». El comando `/optimize-agents` solo existe en Claude Code.
+
 ## Uso
+
+Si la instalaste como plugin, el comando es `/optimize-agents-md:optimize-agents` en lugar de `/optimize-agents`.
 
 - `/optimize-agents` — revisa solo `AGENTS.md`.
 - `/optimize-agents all` — revisa también los demás ficheros de instrucciones. A los documentos
@@ -53,6 +82,8 @@ La comprobación periódica no gasta tokens: es el script en modo rápido, y nun
 python3 .claude/skills/optimize-agents-md/scripts/audit_agents.py AGENTS.md --check
 ```
 
+La ruta es la de la instalación a mano; con el plugin, ejecuta el script desde una copia de este repo.
+
 Sale con 2 si `AGENTS.md` supera 4.000 tokens o ha crecido más de un 20 % desde la última
 optimización aprobada (guardada en `.agents-baseline.json`), y con 0 si no. Prográmalo con cron,
 systemd, tu CI o un gancho de git, y que te avise cuando salga con 2. Ejemplo con cron, los lunes:
@@ -67,7 +98,7 @@ También puedes comprobarlo a mano con `/optimize-agents check`.
 ## Probarla sin riesgo
 
 ```bash
-cd skill/optimize-agents-md/scripts
+cd skills/optimize-agents-md/scripts
 python3 audit_agents.py ../../../example/AGENTS.md
 python3 check_rules.py ../../../example/AGENTS.md ../../../example/AGENTS.proposed.md
 ```

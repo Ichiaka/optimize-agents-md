@@ -1,0 +1,13 @@
+{
+  "name": "optimize-agents-md",
+  "owner": {
+    "name": "Ichiaka"
+  },
+  "plugins": [
+    {
+      "name": "optimize-agents-md",
+      "source": "./",
+      "description": "Reviews AGENTS.md / CLAUDE.md and proposes a version that costs fewer tokens per session without losing or changing any rule."
+    }
+  ]
+}

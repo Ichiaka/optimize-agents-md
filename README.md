@@ -23,18 +23,47 @@ It moves, it does not delete. Content is split into three kinds:
 A checker looks for every rule from the original in the proposal and **fails if any has disappeared**.
 Nothing is applied until the user says "apply it".
 
-## Installation (Claude Code)
+## Installation
+
+### Claude Code, as a plugin (recommended)
+
+In a Claude Code session, run:
+
+```
+/plugin marketplace add Ichiaka/optimize-agents-md
+/plugin install optimize-agents-md@optimize-agents-md
+```
+
+The command is then available as `/optimize-agents-md:optimize-agents`.
+
+### Asking the agent in the chat
+
+In Claude Code (or any agent that can run shell commands), open your project and write:
+
+> Install the skill from https://github.com/Ichiaka/optimize-agents-md: clone the repo, copy
+> `skills/optimize-agents-md` to `.claude/skills/` and `commands/optimize-agents.md` to `.claude/commands/`.
+
+### By hand
 
 ```bash
 # from your project root
 mkdir -p .claude/skills .claude/commands
-cp -r path/to/this/repo/skill/optimize-agents-md .claude/skills/
+cp -r path/to/this/repo/skills/optimize-agents-md .claude/skills/
 cp path/to/this/repo/commands/optimize-agents.md .claude/commands/
 ```
 
 Open a new session so the agent picks up the skill and the command.
 
+### Other agents (Codex, Cursor, Gemini CLI, Copilot…)
+
+The skill is plain Markdown (`SKILL.md`) plus two Python scripts with no dependencies, so any agent
+that can read files and run Python can use it. Copy `skills/optimize-agents-md` to wherever your tool
+keeps its skills (or anywhere in the project) and ask the agent: "review my AGENTS.md with the
+optimize-agents-md skill". The `/optimize-agents` command only exists in Claude Code.
+
 ## Usage
+
+When installed as a plugin, the command is `/optimize-agents-md:optimize-agents` instead of `/optimize-agents`.
 
 - `/optimize-agents` — reviews only `AGENTS.md`.
 - `/optimize-agents all` — also reviews the other instruction files. For record documents
@@ -53,6 +82,8 @@ The periodic check spends no tokens: it is the script in quick mode, and it neve
 python3 .claude/skills/optimize-agents-md/scripts/audit_agents.py AGENTS.md --check
 ```
 
+The path assumes a manual install; with the plugin, run the script from a clone of this repo.
+
 It exits with 2 if `AGENTS.md` exceeds 4,000 tokens or has grown more than 20 % since the last
 approved optimization (stored in `.agents-baseline.json`), and with 0 otherwise. Schedule it with cron,
 systemd, your CI or a git hook, and have it notify you when it exits with 2. Example with cron, on Mondays:
@@ -67,7 +98,7 @@ You can also check by hand with `/optimize-agents check`.
 ## Try it safely
 
 ```bash
-cd skill/optimize-agents-md/scripts
+cd skills/optimize-agents-md/scripts
 python3 audit_agents.py ../../../example/AGENTS.md
 python3 check_rules.py ../../../example/AGENTS.md ../../../example/AGENTS.proposed.md
 ```
