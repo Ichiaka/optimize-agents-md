@@ -1,5 +1,6 @@
 {
   "name": "optimize-agents-md",
+  "description": "Claude Code plugin that trims AGENTS.md / CLAUDE.md token cost without losing any rule.",
   "owner": {
     "name": "Ichiaka"
   },
