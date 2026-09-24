@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+AGENTS.proposed.md
+!example/AGENTS.proposed.md
